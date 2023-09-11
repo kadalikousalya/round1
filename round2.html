@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tic Tac Toe</title>
+    <style>
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            gap: 4px;
+            width: 300px;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            font-size: 36px;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <center>
+    <div class="board" id="board"></div>
+    <script>
+        const board = document.getElementById("board");
+        const cells = new Array(9).fill(null);
+        let currentPlayer = "X";
+        let gameOver = false;
+
+        // Create the game board
+        for (let i = 0; i < 9; i++) {
+            const cell = document.createElement("div");
+            cell.classList.add("cell");
+            cell.dataset.index = i;
+            cell.addEventListener("click", () => handleCellClick(i));
+            board.appendChild(cell);
+        }
+
+        function handleCellClick(index) {
+            if (gameOver || cells[index]) return;
+
+            cells[index] = currentPlayer;
+            board.children[index].textContent = currentPlayer;
+            board.children[index].classList.add(currentPlayer);
+
+            if (checkWin()) {
+                gameOver = true;
+                alert(`Player ${currentPlayer} wins!`);
+            } else if (cells.every(cell => cell !== null)) {
+                gameOver = true;
+                alert("It's a draw!");
+            } else {
+                currentPlayer = currentPlayer === "X" ? "O" : "X";
+            }
+        }
+
+        function checkWin() {
+            const winPatterns = [
+                [0, 1, 2],
+                [3, 4, 5],
+                [6, 7, 8],
+                [0, 3, 6],
+                [1, 4, 7],
+                [2, 5, 8],
+                [0, 4, 8],
+                [2, 4, 6],
+            ];
+
+            for (const pattern of winPatterns) {
+                const [a, b, c] = pattern;
+                if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    </script>
+</center>
+</body>
+</html>
